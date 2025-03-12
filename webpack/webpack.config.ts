@@ -18,6 +18,14 @@ const config: webpack.Configuration = {
                 exclude: /node_modules/,
                 use: "babel-loader",
             },
+            {
+                test: /\.css$/,
+                use: ["style-loader", "css-loader"],
+            },
+            {
+                test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
+                type: "asset/resource",
+            }
         ],
     },
     output: {
