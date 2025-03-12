@@ -1,6 +1,8 @@
-import conf from "./webpack.base.ts";
+import webpack from "webpack";
 
-conf.mode = "production";
-conf.devtool = "source-map";
+const conf: webpack.Configuration = {
+    mode: "production",
+    devtool: "source-map",
+};
 
 export default conf;

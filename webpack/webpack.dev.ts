@@ -1,17 +1,15 @@
-import conf from "./webpack.base.ts";
 import ReactRefreshPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+import webpack from "webpack";
 import webpackDevServer from "webpack-dev-server";
 
-conf.mode = "development";
-conf.devtool = "inline-source-map";
-
-conf.devServer = {
-    hot: true,
-    open: true,
-} as webpackDevServer.Configuration;
-
-if (!conf.plugins)
-    conf.plugins = [];
-conf.plugins.push(new ReactRefreshPlugin());
+const conf: webpack.Configuration = {
+    mode: "development",
+    devtool: "inline-source-map",
+    devServer: {
+        hot: true,
+        open: true,
+    } as webpackDevServer.Configuration,
+    plugins: [new ReactRefreshPlugin()],
+};
 
 export default conf;
