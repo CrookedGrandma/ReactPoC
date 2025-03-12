@@ -8,7 +8,8 @@
     "start": "webpack serve --config webpack/webpack.config.ts --env env=dev",
     "build": "webpack --config webpack/webpack.config.ts --env env=prod",
     "serve-build": "npx http-server dist -o",
-    "build-serve": "npm run build && npm run serve-build"
+    "build-serve": "npm run build && npm run serve-build",
+    "anlyze-build": "npm run build -- --env analysis=true"
   },
   "dependencies": {
     "react": "^19.0.0",
@@ -26,6 +27,7 @@
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@types/webpack": "^5.28.5",
+    "@types/webpack-bundle-analyzer": "^4.7.0",
     "babel-loader": "^10.0.0",
     "css-loader": "^7.1.2",
     "eslint": "^9.22.0",
@@ -41,6 +43,7 @@
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.26.1",
     "webpack": "^5.98.0",
+    "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0",
     "webpack-merge": "^6.0.1"
