@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'url';
-import path from 'path';
 import HtmlWebpackPlugin from "html-webpack-plugin";
+import path from 'path';
 import webpack from "webpack";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -25,7 +25,7 @@ const config: webpack.Configuration = {
             {
                 test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
                 type: "asset/resource",
-            }
+            },
         ],
     },
     output: {
