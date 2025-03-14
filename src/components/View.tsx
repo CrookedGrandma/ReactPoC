@@ -1,13 +1,15 @@
-import { Image, LargeTitle } from "@fluentui/react-components";
-import IMAGE from "../kip.jpg";
+import ImageGrid from "./ImageGrid.tsx";
+import { LargeTitle } from "@fluentui/react-components";
 
 interface Props {
     className: string;
 }
 
 export default function View(props: Readonly<Props>) {
+    const images = Array.from(Array(25), (_, i) => i + 1).map(i => `${i}.jpg`);
+
     return <div className={props.className}>
         <LargeTitle as="h1" block>Hier komen dan allemaal mooie foto&#39;s te staan</LargeTitle>
-        <Image src={IMAGE} alt="Lekker kippetje" width={300} bordered shape="circular" />
+        <ImageGrid>{images}</ImageGrid>
     </div>;
 }
