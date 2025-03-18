@@ -7,6 +7,7 @@ import View from "./components/View.tsx";
 
 const useStyles = makeStyles({
     app: {
+        padding: "4px",
         display: "grid",
         gridTemplateAreas: `
             "${GArea.Head} ${GArea.Side}"
