@@ -1,10 +1,12 @@
-import { makeStyles, Text, Title1 } from "@fluentui/react-components";
+import { makeStyles, Text, Title1, tokens } from "@fluentui/react-components";
 import { GArea } from "../util.ts";
 
 const useStyles = makeStyles({
     sidebar: {
         gridArea: GArea.Side,
-        padding: "5px",
+        padding: "12px",
+        marginLeft: "12px",
+        borderLeft: `2px solid ${tokens.colorNeutralStroke2}`,
     },
 });
 
