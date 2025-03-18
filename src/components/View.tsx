@@ -1,14 +1,19 @@
+import { LargeTitle, makeStyles } from "@fluentui/react-components";
+import { GArea } from "../util.ts";
 import ImageGrid from "./ImageGrid.tsx";
-import { LargeTitle } from "@fluentui/react-components";
 
-interface Props {
-    className: string;
-}
+const useStyles = makeStyles({
+    main: {
+        gridArea: GArea.Main,
+    },
+});
 
-export default function View(props: Readonly<Props>) {
+export default function View() {
+    const classes = useStyles();
+
     const images = Array.from(Array(25), (_, i) => i + 1).map(i => `${i}.jpg`);
 
-    return <div className={props.className}>
+    return <div className={classes.main}>
         <LargeTitle as="h1" block>Hier komen dan allemaal mooie foto&#39;s te staan</LargeTitle>
         <ImageGrid>{images}</ImageGrid>
     </div>;

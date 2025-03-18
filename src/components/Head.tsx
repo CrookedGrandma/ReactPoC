@@ -1,7 +1,20 @@
-interface Props {
-    className: string;
-}
+import { makeStyles, tokens } from "@fluentui/react-components";
+import FileDropZone from "./FileDropZone.tsx";
+import { GArea } from "../util.ts";
 
-export default function Head(props: Readonly<Props>) {
-    return <div className={props.className}>Head</div>;
+const useStyles = makeStyles({
+    head: {
+        gridArea: GArea.Head,
+        border: `1px solid ${tokens.colorNeutralStroke1}`,
+        borderRadius: tokens.borderRadiusLarge,
+        padding: "16px",
+    },
+});
+
+export default function Head() {
+    const classes = useStyles();
+
+    return <div className={classes.head}>
+        <FileDropZone />
+    </div>;
 }
