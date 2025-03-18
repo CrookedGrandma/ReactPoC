@@ -31,6 +31,7 @@ const config: webpack.Configuration = {
     output: {
         path: path.resolve(__dirname, "../dist"),
         filename: "bundle.js",
+        clean: true,
     },
     plugins: [
         new HtmlWebpackPlugin({

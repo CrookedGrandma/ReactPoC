@@ -1,6 +1,7 @@
-import { LargeTitle, makeStyles } from "@fluentui/react-components";
 import { GArea } from "../util.ts";
 import ImageGrid from "./ImageGrid.tsx";
+import { makeStyles } from "@fluentui/react-components";
+import ViewControls from "./ViewControls.tsx";
 
 const useStyles = makeStyles({
     main: {
@@ -14,7 +15,7 @@ export default function View() {
     const images = Array.from(Array(25), (_, i) => i + 1).map(i => `${i}.jpg`);
 
     return <div className={classes.main}>
-        <LargeTitle as="h1" block>Hier komen dan allemaal mooie foto&#39;s te staan</LargeTitle>
+        <ViewControls />
         <ImageGrid>{images}</ImageGrid>
     </div>;
 }

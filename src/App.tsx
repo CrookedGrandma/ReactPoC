@@ -1,4 +1,5 @@
 import { FluentProvider, makeStyles, webLightTheme } from "@fluentui/react-components";
+import { FilterProvider } from "./components/FilterContext.tsx";
 import { GArea } from "./util.ts";
 import Head from "./components/Head.tsx";
 import Sidebar from "./components/Sidebar.tsx";
@@ -19,8 +20,10 @@ const useStyles = makeStyles({
 export default function App() {
     const classes = useStyles();
     return <FluentProvider id="app" className={classes.app} theme={webLightTheme}>
-        <Head />
-        <Sidebar />
-        <View />
+        <FilterProvider>
+            <Head />
+            <Sidebar />
+            <View />
+        </FilterProvider>
     </FluentProvider>;
 }
