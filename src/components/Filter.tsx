@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useId } from "react";
 import { Select, SelectOnChangeData } from "@fluentui/react-components";
 import { SharedStyles } from "../util.ts";
-import { useFilter } from "./FilterContext.tsx";
+import { useFilter } from "./context/FilterContext.tsx";
 
 const useStyles = SharedStyles.dropdown();
 

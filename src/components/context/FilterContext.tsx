@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 
 interface FilterContext {
     value: string;
@@ -7,8 +7,8 @@ interface FilterContext {
 
 const FilterContext = createContext<FilterContext | null>(null);
 
-export function FilterProvider({ children }: Readonly<{ children: ReactNode }>) {
-    const [value, setValue] = useState("alle");
+export function FilterProvider({ children, defaultValue }: Parent & Readonly<{ defaultValue: string }>) {
+    const [value, setValue] = useState(defaultValue);
 
     function setFilter(newValue: string) {
         setValue(newValue);
