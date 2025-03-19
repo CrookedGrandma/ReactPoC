@@ -1,42 +1,31 @@
-import { Dropdown, makeStyles, Option, OptionOnSelectData, SelectionEvents } from "@fluentui/react-components";
-import { useEffect, useId } from "react";
+import { ChangeEvent, useEffect, useId } from "react";
+import { Select, SelectOnChangeData } from "@fluentui/react-components";
+import { SharedStyles } from "../util.ts";
 import { useFilter } from "./FilterContext.tsx";
 
-const useStyles = makeStyles({
-    label: {
-        marginRight: "1rem",
-    },
-});
+const useStyles = SharedStyles.dropdown();
 
 export default function Filter() {
     const classes = useStyles();
 
-    const { selectedOption, setFilter, text } = useFilter();
+    const { setFilter, value } = useFilter();
 
     const ddId = useId();
 
-    function handleSelection(_: SelectionEvents, data: OptionOnSelectData) {
-        if (data.optionText == text)
-            return;
-        setFilter(data.optionText ?? "", data.selectedOptions[0]);
+    function handleChange(_: ChangeEvent<HTMLSelectElement>, data: SelectOnChangeData) {
+        setFilter(data.value);
     }
 
     useEffect(() => {
         // Logic for when the filter value is changed
-        console.log(`Filter value changed to: ${text}`);
-    }, [text]);
+        console.log(`Filter value changed to: ${value}`);
+    }, [value]);
 
     return <div>
         <label htmlFor={ddId} className={classes.label}>Filter</label>
-        <Dropdown
-            id={ddId}
-            inlinePopup
-            value={text}
-            selectedOptions={[selectedOption]}
-            onOptionSelect={handleSelection}
-        >
-            <Option value="alle">Alle</Option>
-            <Option value="iets-anders">Iets anders</Option>
-        </Dropdown>
+        <Select id={ddId} className={classes.dropdown} value={value} onChange={handleChange}>
+            <option value="alle">Alle</option>
+            <option value="iets-anders">Iets anders</option>
+        </Select>
     </div>;
 }

@@ -1,27 +1,23 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 
 interface FilterContext {
-    selectedOption: string;
-    text: string;
-    setFilter: (text: string, selectedOption: string) => void;
+    value: string;
+    setFilter: (value: string) => void;
 }
 
 const FilterContext = createContext<FilterContext | null>(null);
 
 export function FilterProvider({ children }: Readonly<{ children: ReactNode }>) {
-    const [value, setValue] = useState("Alle");
-    const [selectedOptions, setSelectedOptions] = useState(["alle"]);
+    const [value, setValue] = useState("alle");
 
-    function setFilter(newValue: string, newSelectedOption: string) {
+    function setFilter(newValue: string) {
         setValue(newValue);
-        setSelectedOptions([newSelectedOption]);
     }
 
     const context = useMemo(() => ({
-        selectedOption: selectedOptions[0],
-        text: value,
+        value: value,
         setFilter,
-    }), [selectedOptions, value]);
+    }), [value]);
 
     return <FilterContext.Provider value={context}>{children}</FilterContext.Provider>;
 }
