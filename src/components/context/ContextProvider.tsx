@@ -1,14 +1,12 @@
-import { FilterProvider } from "./FilterContext.tsx";
-import React from "react";
-import { SortProvider } from "./SortContext.tsx";
+import FotoboekContext from "./Contexts.tsx";
 
 export function ContextProvider({ children }: Parent) {
     return (
         // Add new context providers here
-        <FilterProvider defaultValue="alle">
-            <SortProvider defaultValue="asc">
+        <FotoboekContext.Filter.Provider defaultValue="alle">
+            <FotoboekContext.Sort.Provider defaultValue="asc">
                 {children}
-            </SortProvider>
-        </FilterProvider>
+            </FotoboekContext.Sort.Provider>
+        </FotoboekContext.Filter.Provider>
     );
 }

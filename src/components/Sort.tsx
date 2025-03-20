@@ -1,8 +1,8 @@
+import FotoboekContext from "./context/Contexts.tsx";
 import SelectDropdown from "./SelectDropdown";
-import { useSort } from "./context/SortContext";
 
 export default function Sort() {
-    const { setSort, value } = useSort();
+    const { setValue: setSort, value } = FotoboekContext.Sort.useValue();
 
     function handleValueChange(value: string) {
         // Implement logic that should trigger whenever the value is changed (by the user or by another component)

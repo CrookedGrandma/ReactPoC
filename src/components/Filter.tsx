@@ -1,8 +1,8 @@
+import FotoboekContext from "./context/Contexts.tsx";
 import SelectDropdown from "./SelectDropdown";
-import { useFilter } from "./context/FilterContext";
 
 export default function Filter() {
-    const { setFilter, value } = useFilter();
+    const { setValue: setFilter, value } = FotoboekContext.Filter.useValue();
 
     function handleValueChange(value: string) {
         // Implement logic that should trigger whenever the value is changed (by the user or by another component)
