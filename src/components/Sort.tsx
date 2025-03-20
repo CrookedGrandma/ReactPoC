@@ -1,31 +1,24 @@
-import { ChangeEvent, useEffect, useId } from "react";
-import { Select, SelectOnChangeData } from "@fluentui/react-components";
-import { SharedStyles } from "../util.ts";
-import { useSort } from "./context/SortContext.tsx";
-
-const useStyles = SharedStyles.dropdown();
+import SelectDropdown from "./SelectDropdown";
+import { useSort } from "./context/SortContext";
 
 export default function Sort() {
-    const classes = useStyles();
-
     const { setSort, value } = useSort();
 
-    const ddId = useId();
-
-    function handleChange(_: ChangeEvent<HTMLSelectElement>, data: SelectOnChangeData) {
-        setSort(data.value);
+    function handleValueChange(value: string) {
+        // Implement logic that should trigger whenever the value is changed (by the user or by another component)
+        console.log(`Sort component value changed: ${value}`);
     }
 
-    useEffect(() => {
-        // Logic for when the sort value is changed
-        console.log(`Sorting: ${value}`);
-    }, [value]);
+    const sortOptions = [
+        { value: "asc", label: "A-Z" },
+        { value: "desc", label: "Z-A" },
+    ];
 
-    return <div>
-        <label htmlFor={ddId} className={classes.label}>Sorteren:</label>
-        <Select id={ddId} className={classes.dropdown} value={value} onChange={handleChange}>
-            <option value="asc">A-Z</option>
-            <option value="desc">Z-A</option>
-        </Select>
-    </div>;
+    return <SelectDropdown
+        label="Sorteren:"
+        value={value}
+        onChange={setSort}
+        options={sortOptions}
+        onValueChange={handleValueChange}
+    />;
 }

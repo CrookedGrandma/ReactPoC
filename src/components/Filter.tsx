@@ -1,31 +1,24 @@
-import { ChangeEvent, useEffect, useId } from "react";
-import { Select, SelectOnChangeData } from "@fluentui/react-components";
-import { SharedStyles } from "../util.ts";
-import { useFilter } from "./context/FilterContext.tsx";
-
-const useStyles = SharedStyles.dropdown();
+import SelectDropdown from "./SelectDropdown";
+import { useFilter } from "./context/FilterContext";
 
 export default function Filter() {
-    const classes = useStyles();
-
     const { setFilter, value } = useFilter();
 
-    const ddId = useId();
-
-    function handleChange(_: ChangeEvent<HTMLSelectElement>, data: SelectOnChangeData) {
-        setFilter(data.value);
+    function handleValueChange(value: string) {
+        // Implement logic that should trigger whenever the value is changed (by the user or by another component)
+        console.log(`Filter component value changed: ${value}`);
     }
 
-    useEffect(() => {
-        // Logic for when the filter value is changed
-        console.log(`Filter value changed to: ${value}`);
-    }, [value]);
+    const filterOptions = [
+        { value: "alle", label: "Alle" },
+        { value: "iets-anders", label: "Iets anders" },
+    ];
 
-    return <div>
-        <label htmlFor={ddId} className={classes.label}>Filter</label>
-        <Select id={ddId} className={classes.dropdown} value={value} onChange={handleChange}>
-            <option value="alle">Alle</option>
-            <option value="iets-anders">Iets anders</option>
-        </Select>
-    </div>;
+    return <SelectDropdown
+        label="Filter"
+        value={value}
+        onChange={setFilter}
+        options={filterOptions}
+        onValueChange={handleValueChange}
+    />;
 }

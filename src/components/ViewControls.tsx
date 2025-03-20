@@ -1,6 +1,7 @@
+import { Button, makeStyles } from "@fluentui/react-components";
 import Filter from "./Filter.tsx";
-import { makeStyles } from "@fluentui/react-components";
 import Sort from "./Sort.tsx";
+import { useFilter } from "./context/FilterContext.tsx";
 
 const useStyles = makeStyles({
     controlRow: {
@@ -13,6 +14,8 @@ const useStyles = makeStyles({
 export default function ViewControls() {
     const classes = useStyles();
 
+    const { setFilter } = useFilter();
+
     return <>
         <div className={classes.controlRow}>
             <Filter />
@@ -20,6 +23,7 @@ export default function ViewControls() {
         </div>
         <div className={classes.controlRow}>
             {/* buttons, select all, file counter, generate document */}
+            <Button onClick={() => setFilter("iets-anders")}>Test</Button>
         </div>
     </>;
 }

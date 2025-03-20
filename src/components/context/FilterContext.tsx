@@ -5,19 +5,16 @@ interface FilterContext {
     setFilter: (value: string) => void;
 }
 
-const FilterContext = createContext<FilterContext | null>(null);
+const FilterContext = createContext<FilterContext | undefined>(undefined);
 
-export function FilterProvider({ children, defaultValue }: Parent & Readonly<{ defaultValue: string }>) {
+export function FilterProvider({ children, defaultValue }: Parent & DefaultValue<string>) {
     const [value, setValue] = useState(defaultValue);
 
     function setFilter(newValue: string) {
         setValue(newValue);
     }
 
-    const context = useMemo(() => ({
-        value: value,
-        setFilter,
-    }), [value]);
+    const context = useMemo(() => ({ value, setFilter }), [value]);
 
     return <FilterContext.Provider value={context}>{children}</FilterContext.Provider>;
 }

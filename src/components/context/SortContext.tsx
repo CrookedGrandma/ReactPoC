@@ -5,19 +5,16 @@ interface SortContext {
     setSort: (value: string) => void;
 }
 
-const SortContext = createContext<SortContext | null>(null);
+const SortContext = createContext<SortContext | undefined>(undefined);
 
-export function SortProvider({ children, defaultValue }: Parent & Readonly<{ defaultValue: string }>) {
+export function SortProvider({ children, defaultValue }: Parent & DefaultValue<string>) {
     const [value, setValue] = useState(defaultValue);
 
     function setSort(newValue: string) {
         setValue(newValue);
     }
 
-    const context = useMemo(() => ({
-        value: value,
-        setSort,
-    }), [value]);
+    const context = useMemo(() => ({ value, setSort }), [value]);
 
     return <SortContext.Provider value={context}>{children}</SortContext.Provider>;
 }
