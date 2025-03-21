@@ -7,6 +7,11 @@ const useStyles = makeStyles({
     container: {
         display: "grid",
         gridTemplateColumns: "repeat(5, 1fr)",
+        gap: "2px",
+    },
+    skeletonItem: {
+        width: "200px",
+        height: "200px",
     },
 });
 
@@ -25,7 +30,7 @@ export default function ImageGrid() {
         case ImageProviderStatus.Success:
             return <div className={classes.container}>
                 {imageProvider.images.map(file =>
-                    <Image key={file.id} src={file.data} alt={file.title} width={200} bordered shape="rounded" />)}
+                    <Image key={file.id} src={file.data} alt={file.title} width={200} shape="rounded" />)}
             </div>;
 
         case ImageProviderStatus.Failed:
@@ -33,6 +38,9 @@ export default function ImageGrid() {
 
         case ImageProviderStatus.Waiting:
         case ImageProviderStatus.NotStarted:
-            return <Skeleton><SkeletonItem size={32} /></Skeleton>;
+            return <Skeleton className={classes.container}>
+                {Array.from(Array(12), (_, i) => i)
+                    .map(i => <SkeletonItem key={`skel${i}`} className={classes.skeletonItem} shape="square" />)}
+            </Skeleton>;
     }
 }

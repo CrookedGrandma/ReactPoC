@@ -24,7 +24,7 @@ export default class ImageProvider {
         this.status = ImageProviderStatus.Waiting;
 
         // Get some pre-defined images for testing purposes
-        const imageNames = Array.from(Array(25), (_, i) => i + 1).map(i => `${i}.jpg`);
+        const imageNames = Array.from(Array(25), (_, i) => `${i + 1}.jpg`);
 
         try {
             await sleep(1000); // For simulating getting lots of external images
