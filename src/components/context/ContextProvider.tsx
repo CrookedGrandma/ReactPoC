@@ -1,15 +1,17 @@
 import FotoboekContext from "./Contexts.tsx";
-import ImageProvider from "../../data/ImageProvider.ts";
+import ImageProvider from "./ImageProvider.tsx";
 
 export function ContextProvider({ children }: Parent) {
     return (
         // Add new context providers here
-        <FotoboekContext.ImageProvider.Provider defaultValue={new ImageProvider()}>
-            <FotoboekContext.Filter.Provider defaultValue="alle">
-                <FotoboekContext.Sort.Provider defaultValue="asc">
-                    {children}
-                </FotoboekContext.Sort.Provider>
-            </FotoboekContext.Filter.Provider>
-        </FotoboekContext.ImageProvider.Provider>
+        <FotoboekContext.ImageList.Provider defaultValue={[]}>
+            <ImageProvider>
+                <FotoboekContext.Filter.Provider defaultValue="alle">
+                    <FotoboekContext.Sort.Provider defaultValue="asc">
+                        {children}
+                    </FotoboekContext.Sort.Provider>
+                </FotoboekContext.Filter.Provider>
+            </ImageProvider>
+        </FotoboekContext.ImageList.Provider>
     );
 }

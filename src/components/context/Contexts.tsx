@@ -1,10 +1,10 @@
+import { Annotation } from "./ImageProvider.tsx";
 import { createValueContext } from "./createValueContext.tsx";
-import ImageProvider from "../../data/ImageProvider.ts";
 
 const FotoboekContext = {
     Filter: createValueContext<string>("Filter"),
     Sort: createValueContext<string>("Sort"),
-    ImageProvider: createValueContext<ImageProvider>("ImageProvider"),
+    ImageList: createValueContext<Annotation[]>("ImageList"),
 };
 
 export default FotoboekContext;

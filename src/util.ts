@@ -26,10 +26,14 @@ export function publicImgPath(filePath: string) {
 export async function readBase64(filePath: string) {
     const f = await fetch(publicImgPath(filePath));
     const b = await f.blob();
+    return blobToBase64(b);
+}
+
+export function blobToBase64(blob: Blob) {
     return new Promise<string>(resolve => {
         const fr = new FileReader();
         fr.onload = () => resolve(fr.result as string);
-        fr.readAsDataURL(b);
+        fr.readAsDataURL(blob);
     });
 }
 

@@ -1,7 +1,6 @@
 import { Image, makeStyles, Skeleton, SkeletonItem } from "@fluentui/react-components";
-import { useEffect, useState } from "react";
+import { ImageProviderStatus, useImageProvider } from "./context/ImageProvider.tsx";
 import FotoboekContext from "./context/Contexts.tsx";
-import { ImageProviderStatus } from "../data/ImageProvider.ts";
 
 const useStyles = makeStyles({
     container: {
@@ -18,18 +17,13 @@ const useStyles = makeStyles({
 export default function ImageGrid() {
     const classes = useStyles();
 
-    const { value: imageProvider } = FotoboekContext.ImageProvider.useValue();
-    const [status, setStatus] = useState<ImageProviderStatus>(imageProvider.status);
+    const imageProvider = useImageProvider();
+    const { value: images } = FotoboekContext.ImageList.useValue();
 
-    useEffect(() => {
-        imageProvider.retrieveImages()
-            .then(() => setStatus(imageProvider.status));
-    }, [imageProvider]);
-
-    switch (status) {
+    switch (imageProvider.state.status) {
         case ImageProviderStatus.Success:
             return <div className={classes.container}>
-                {imageProvider.images.map(file =>
+                {images.map(file =>
                     <Image key={file.id} src={file.data} alt={file.title} width={200} shape="rounded" />)}
             </div>;
 
