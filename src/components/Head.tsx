@@ -15,6 +15,6 @@ export default function Head() {
     const classes = useStyles();
 
     return <div className={classes.head}>
-        <FileDropZone />
+        <FileDropZone allowedTypes="image/*" />
     </div>;
 }

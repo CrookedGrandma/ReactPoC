@@ -15,9 +15,10 @@ const useStyles = makeStyles({
 
 interface Props {
     onFileSelect: (files: FileList) => void;
+    allowedTypes?: string;
 }
 
-export default function FileInput(props: Readonly<Props>) {
+export default function FileInput({ onFileSelect, allowedTypes }: Readonly<Props>) {
     const classes = useStyles();
 
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -29,11 +30,18 @@ export default function FileInput(props: Readonly<Props>) {
     function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
         if (!event.target.files?.length)
             return;
-        props.onFileSelect(event.target.files);
+        onFileSelect(event.target.files);
     }
 
     return <div className={classes.container}>
-        <input type="file" multiple ref={fileInputRef} className={classes.hidden} onChange={handleFileChange} />
+        <input
+            type="file"
+            multiple
+            ref={fileInputRef}
+            className={classes.hidden}
+            onChange={handleFileChange}
+            accept={allowedTypes ?? "*"}
+        />
         <Button icon={<FolderListRegular />} onClick={handleButtonClick} size="large">Bladeren...</Button>
     </div>;
 }

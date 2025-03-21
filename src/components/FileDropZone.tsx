@@ -23,7 +23,11 @@ const useStyles = makeStyles({
     },
 });
 
-export default function FileDropZone() {
+interface Props {
+    allowedTypes?: string;
+}
+
+export default function FileDropZone({ allowedTypes }: Readonly<Props>) {
     const classes = useStyles();
 
     const [isDragging, setIsDragging] = useState(false);
@@ -62,6 +66,6 @@ export default function FileDropZone() {
         >
             <p>{isDragging ? "Laat hier los om te uploaden" : "Sleep bestanden om te uploaden"}</p>
         </div>
-        <FileInput onFileSelect={handleFileSelect} />
+        <FileInput onFileSelect={handleFileSelect} allowedTypes={allowedTypes} />
     </div>;
 }
