@@ -1,5 +1,7 @@
-import { Image, makeStyles } from "@fluentui/react-components";
-import { publicImgPath } from "../util.ts";
+import { Image, makeStyles, Skeleton, SkeletonItem } from "@fluentui/react-components";
+import { useEffect, useState } from "react";
+import FotoboekContext from "./context/Contexts.tsx";
+import { ImageProviderStatus } from "../data/ImageProvider.ts";
 
 const useStyles = makeStyles({
     container: {
@@ -8,14 +10,29 @@ const useStyles = makeStyles({
     },
 });
 
-interface Props {
-    children: string[];
-}
-
-export default function ImageGrid(props: Readonly<Props>) {
+export default function ImageGrid() {
     const classes = useStyles();
-    return <div className={classes.container}>
-        {props.children.map(file =>
-            <Image key={file} src={publicImgPath(file)} alt={file} width={200} bordered shape="rounded" />)}
-    </div>;
+
+    const { value: imageProvider } = FotoboekContext.ImageProvider.useValue();
+    const [status, setStatus] = useState<ImageProviderStatus>(imageProvider.status);
+
+    useEffect(() => {
+        imageProvider.retrieveImages()
+            .then(() => setStatus(imageProvider.status));
+    }, [imageProvider]);
+
+    switch (status) {
+        case ImageProviderStatus.Success:
+            return <div className={classes.container}>
+                {imageProvider.images.map(file =>
+                    <Image key={file.id} src={file.data} alt={file.title} width={200} bordered shape="rounded" />)}
+            </div>;
+
+        case ImageProviderStatus.Failed:
+            return <p>Oepsie poepsie</p>;
+
+        case ImageProviderStatus.Waiting:
+        case ImageProviderStatus.NotStarted:
+            return <Skeleton><SkeletonItem size={32} /></Skeleton>;
+    }
 }

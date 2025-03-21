@@ -8,6 +8,7 @@ import View from "./components/View.tsx";
 const useStyles = makeStyles({
     app: {
         padding: "4px",
+        minHeight: "calc(100vh - 4px*2)", // Subtract the padding
         display: "grid",
         gridTemplateAreas: `
             "${GArea.Head} ${GArea.Side}"

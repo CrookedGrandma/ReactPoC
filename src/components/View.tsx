@@ -12,10 +12,8 @@ const useStyles = makeStyles({
 export default function View() {
     const classes = useStyles();
 
-    const images = Array.from(Array(25), (_, i) => i + 1).map(i => `${i}.jpg`);
-
     return <div className={classes.main}>
         <ViewControls />
-        <ImageGrid>{images}</ImageGrid>
+        <ImageGrid />
     </div>;
 }

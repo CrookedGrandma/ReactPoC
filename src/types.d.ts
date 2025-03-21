@@ -3,5 +3,5 @@ declare module 'eslint-plugin-import-newlines';
 
 type AnyObject = { [key: string]: any };
 
-type Parent = Readonly<{ children: ReactNode }>;
+type Parent<T = ReactNode> = Readonly<{ children: T }>;
 type DefaultValue<T> = Readonly<{ defaultValue: T }>;

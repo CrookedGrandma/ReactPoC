@@ -22,3 +22,17 @@ export abstract class SharedStyles {
 export function publicImgPath(filePath: string) {
     return `imgs/${filePath}`;
 }
+
+export async function readBase64(filePath: string) {
+    const f = await fetch(publicImgPath(filePath));
+    const b = await f.blob();
+    return new Promise<string>(resolve => {
+        const fr = new FileReader();
+        fr.onload = () => resolve(fr.result as string);
+        fr.readAsDataURL(b);
+    });
+}
+
+export function sleep(ms: number) {
+    return new Promise<void>(resolve => setTimeout(resolve, ms));
+}
