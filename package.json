@@ -5,12 +5,13 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "start": "webpack serve --config webpack/webpack.config.ts --env env=dev",
-    "build": "webpack --config webpack/webpack.config.ts --env env=prod",
+    "start": "npm run enable-ts -- webpack serve --config webpack/webpack.config.ts --env env=dev",
+    "build": "npm run enable-ts -- webpack --config webpack/webpack.config.ts --env env=prod",
     "serve-build": "npx http-server dist -o",
     "build-serve": "npm run build && npm run serve-build",
     "anlyze-build": "npm run build -- --env analysis=true",
-    "fix": "eslint --fix"
+    "fix": "eslint --fix",
+    "enable-ts": "cross-env NODE_OPTIONS='--experimental-strip-types'"
   },
   "dependencies": {
     "@fluentui/react-components": "^9.60.1",
@@ -31,6 +32,7 @@
     "@types/webpack": "^5.28.5",
     "@types/webpack-bundle-analyzer": "^4.7.0",
     "babel-loader": "^10.0.0",
+    "cross-env": "^7.0.3",
     "css-loader": "^7.1.2",
     "eslint": "^9.22.0",
     "eslint-plugin-import-newlines": "^1.4.0",
