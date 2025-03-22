@@ -1,6 +1,7 @@
 import { makeStyles, mergeClasses, shorthands, tokens } from "@fluentui/react-components";
 import React, { useState } from "react";
 import FileInput from "./FileInput.tsx";
+import { useImageProvider } from "./context/ImageProvider.tsx";
 
 const useStyles = makeStyles({
     container: {
@@ -30,16 +31,18 @@ interface Props {
 export default function FileDropZone({ allowedTypes }: Readonly<Props>) {
     const classes = useStyles();
 
+    const imageProvider = useImageProvider();
+
     const [isDragging, setIsDragging] = useState(false);
 
-    function handleDrop(event: React.DragEvent<HTMLDivElement>) {
+    async function handleDrop(event: React.DragEvent<HTMLDivElement>) {
         event.preventDefault();
         setIsDragging(false);
 
         if (!event.dataTransfer.files.length)
             return;
 
-        handleFileSelect(event.dataTransfer.files);
+        await handleFileSelect(event.dataTransfer.files);
     }
 
     function handleDragOver(event: React.DragEvent<HTMLDivElement>) {
@@ -51,9 +54,9 @@ export default function FileDropZone({ allowedTypes }: Readonly<Props>) {
         setIsDragging(false);
     }
 
-    function handleFileSelect(files: FileList) {
+    async function handleFileSelect(files: FileList) {
         console.log("Selected files:", files);
-        alert(`You uploaded ${files.length} files.`);
+        await imageProvider.uploadImages(files);
     }
 
     return <div className={classes.container}>

@@ -21,7 +21,14 @@ interface ImageProviderService {
     };
     retrieveImages: () => Promise<Annotation[]>;
     uploadImages: (images: ArrayLike<File>) => Promise<void>;
-    uploadImage: (image: File) => Promise<void>;
+}
+
+async function blobToAnnotation(image: File): Promise<Annotation> {
+    return {
+        id: crypto.randomUUID(),
+        title: new Date().toISOString(),
+        data: await blobToBase64(image),
+    };
 }
 
 const Context = createContext<ImageProviderService | undefined>(undefined);
@@ -31,7 +38,6 @@ export function ImageProvider({ children }: Parent) {
 
     const imageListContext = FotoboekContext.ImageList.useValue();
     const setImageList = useRef(imageListContext.setValue);
-    const imageList = useRef(imageListContext.value);
 
     const providerService: ImageProviderService = useMemo<ImageProviderService>(() => ({
         state: {
@@ -65,18 +71,10 @@ export function ImageProvider({ children }: Parent) {
         },
 
         uploadImages: async (images: ArrayLike<File>) => {
-            await Promise.all(Array.from(images).map(async file => providerService.uploadImage(file)));
+            const annotations = await Promise.all(Array.from(images).map(blobToAnnotation));
+            setImageList.current([...imageListContext.value, ...annotations]);
         },
-
-        uploadImage: async (image: File) => {
-            const updatedImages = [...imageList.current, {
-                id: crypto.randomUUID(),
-                title: new Date().toISOString(),
-                data: await blobToBase64(image),
-            }];
-            setImageList.current(updatedImages);
-        },
-    }), [status]);
+    }), [imageListContext.value, status]);
 
     const serviceRef = useRef(providerService);
 
