@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, useState } from "react";
 
-export interface ValueContext<T> {
+interface ValueContext<T> {
     value: T;
     setValue: (value: T) => void;
 }

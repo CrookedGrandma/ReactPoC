@@ -1,5 +1,5 @@
 import FotoboekContext from "./Contexts.tsx";
-import ImageProvider from "./ImageProvider.tsx";
+import { ImageProvider } from "./ImageProvider.tsx";
 
 export function ContextProvider({ children }: Parent) {
     return (

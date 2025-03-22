@@ -1,7 +1,6 @@
 import { blobToBase64, readBase64, sleep } from "../../util.ts";
-import { Component, ComponentType, createContext, useContext } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef } from "react";
 import FotoboekContext from "./Contexts.tsx";
-import { ValueContext } from "./createValueContext.tsx";
 
 export interface Annotation {
     id: ReturnType<typeof crypto.randomUUID>;
@@ -16,89 +15,73 @@ export enum ImageProviderStatus {
     Failed,
 }
 
-const Context = createContext<ImageProvider | undefined>(undefined);
-
-interface State {
-    // images: Annotation[];
-    status: ImageProviderStatus;
-    // setImages: ((images: Annotation[]) => void);
-    images: ValueContext<Annotation[]>;
-}
-
-interface ImageListContextProp {
-    imageListContext: ValueContext<Annotation[]>;
-}
-
-function withImageListContext(Component: ComponentType<Parent & ImageListContextProp>) {
-    return function WrappedComponent(props: Parent) {
-        const context = FotoboekContext.ImageList.useValue();
-        return <Component {...props} imageListContext={context} />;
+interface ImageProviderService {
+    state: {
+        status: ImageProviderStatus;
     };
+    retrieveImages: () => Promise<Annotation[]>;
+    uploadImages: (images: ArrayLike<File>) => Promise<void>;
+    uploadImage: (image: File) => Promise<void>;
 }
 
-class ImageProvider extends Component<Parent & ImageListContextProp, State> {
-    constructor(props: Parent & ImageListContextProp) {
-        super(props);
-        this.state = {
-            // images: [],
+const Context = createContext<ImageProviderService | undefined>(undefined);
+
+export function ImageProvider({ children }: Parent) {
+    const imageListContext = FotoboekContext.ImageList.useValue();
+    const setImageList = useRef(imageListContext.setValue);
+    const imageList = useRef(imageListContext.value);
+
+    const providerService: ImageProviderService = useMemo<ImageProviderService>(() => ({
+        state: {
             status: ImageProviderStatus.NotStarted,
-            images: this.props.imageListContext,
-        };
-    }
+        },
 
-    render() {
-        return <Context.Provider value={this}>{this.props.children}</Context.Provider>;
-    }
+        retrieveImages: async () => {
+            providerService.state.status = ImageProviderStatus.Waiting;
 
-    componentDidMount() {
-        this.retrieveImages();
-    }
+            // Get some pre-defined images for testing purposes
+            const imageNames = Array.from(Array(25), (_, i) => `${i + 1}.jpg`);
 
-    /**
-     * Retrieve images from 'the server'
-     */
-    async retrieveImages(): Promise<Annotation[]> {
-        this.setState({ status: ImageProviderStatus.Waiting });
+            try {
+                await sleep(1000); // For simulating getting lots of external images
+                const results: Annotation[] = await Promise.all(imageNames.map(async file => ({
+                    id: crypto.randomUUID(),
+                    title: file,
+                    data: await readBase64(file),
+                })));
 
-        // Get some pre-defined images for testing purposes
-        const imageNames = Array.from(Array(25), (_, i) => `${i + 1}.jpg`);
+                providerService.state.status = ImageProviderStatus.Success;
+                setImageList.current(results);
+                return results;
+            }
+            catch (error) {
+                providerService.state.status = ImageProviderStatus.Failed;
+                console.error(error);
+                setImageList.current([]);
+                return [];
+            }
+        },
 
-        try {
-            await sleep(1000); // For simulating getting lots of external images
-            const results: Annotation[] = await Promise.all(imageNames.map(async file => ({
+        uploadImages: async (images: ArrayLike<File>) => {
+            await Promise.all(Array.from(images).map(async file => providerService.uploadImage(file)));
+        },
+
+        uploadImage: async (image: File) => {
+            const updatedImages = [...imageList.current, {
                 id: crypto.randomUUID(),
-                title: file,
-                data: await readBase64(file),
-            })));
+                title: new Date().toISOString(),
+                data: await blobToBase64(image),
+            }];
+            setImageList.current(updatedImages);
+        },
+    }), []);
 
-            this.setState({ status: ImageProviderStatus.Success });
-            this.state.images.setValue(results);
-            return results;
-        }
-        catch (error) {
-            this.setState({ status: ImageProviderStatus.Failed });
-            console.error(error);
-            this.state.images.setValue([]);
-            return [];
-        }
-    }
+    useEffect(() => {
+        providerService.retrieveImages();
+    }, [providerService]);
 
-    async uploadImages(images: ArrayLike<File>): Promise<void> {
-        await Promise.all(Array.from(images).map(async file => this.uploadImage(file)));
-    }
-
-    async uploadImage(image: File): Promise<void> {
-        const images = this.state.images.value;
-        images.push({
-            id: crypto.randomUUID(),
-            title: new Date().toISOString(),
-            data: await blobToBase64(image),
-        });
-        this.state.images.setValue(images);
-    }
+    return <Context.Provider value={providerService}>{children}</Context.Provider>;
 }
-
-export default withImageListContext(ImageProvider);
 
 export function useImageProvider() {
     const context = useContext(Context);
