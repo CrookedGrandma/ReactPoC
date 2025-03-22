@@ -1,5 +1,5 @@
 import { blobToBase64, readBase64, sleep } from "../../util.ts";
-import { createContext, useContext, useEffect, useMemo, useRef } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import FotoboekContext from "./Contexts.tsx";
 
 export interface Annotation {
@@ -27,17 +27,19 @@ interface ImageProviderService {
 const Context = createContext<ImageProviderService | undefined>(undefined);
 
 export function ImageProvider({ children }: Parent) {
+    const [status, setStatus] = useState(ImageProviderStatus.NotStarted);
+
     const imageListContext = FotoboekContext.ImageList.useValue();
     const setImageList = useRef(imageListContext.setValue);
     const imageList = useRef(imageListContext.value);
 
     const providerService: ImageProviderService = useMemo<ImageProviderService>(() => ({
         state: {
-            status: ImageProviderStatus.NotStarted,
+            status: status,
         },
 
         retrieveImages: async () => {
-            providerService.state.status = ImageProviderStatus.Waiting;
+            setStatus(ImageProviderStatus.Waiting);
 
             // Get some pre-defined images for testing purposes
             const imageNames = Array.from(Array(25), (_, i) => `${i + 1}.jpg`);
@@ -50,12 +52,12 @@ export function ImageProvider({ children }: Parent) {
                     data: await readBase64(file),
                 })));
 
-                providerService.state.status = ImageProviderStatus.Success;
+                setStatus(ImageProviderStatus.Success);
                 setImageList.current(results);
                 return results;
             }
             catch (error) {
-                providerService.state.status = ImageProviderStatus.Failed;
+                setStatus(ImageProviderStatus.Failed);
                 console.error(error);
                 setImageList.current([]);
                 return [];
@@ -74,11 +76,13 @@ export function ImageProvider({ children }: Parent) {
             }];
             setImageList.current(updatedImages);
         },
-    }), []);
+    }), [status]);
+
+    const serviceRef = useRef(providerService);
 
     useEffect(() => {
-        providerService.retrieveImages();
-    }, [providerService]);
+        serviceRef.current.retrieveImages();
+    }, []);
 
     return <Context.Provider value={providerService}>{children}</Context.Provider>;
 }

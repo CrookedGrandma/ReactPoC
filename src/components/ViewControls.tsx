@@ -1,6 +1,7 @@
 import { Button, makeStyles } from "@fluentui/react-components";
+import { ImageProviderStatus, useImageProvider } from "./context/ImageProvider.tsx";
+import { ArrowClockwiseFilled } from "@fluentui/react-icons";
 import Filter from "./Filter.tsx";
-import FotoboekContext from "./context/Contexts.tsx";
 import Sort from "./Sort.tsx";
 
 const useStyles = makeStyles({
@@ -14,7 +15,12 @@ const useStyles = makeStyles({
 export default function ViewControls() {
     const classes = useStyles();
 
-    const { setValue: setFilter } = FotoboekContext.Filter.useValue();
+    const imageProvider = useImageProvider();
+
+    const iconClass = [ImageProviderStatus.NotStarted, ImageProviderStatus.Waiting]
+        .includes(imageProvider.state.status)
+        ? "rotating"
+        : "";
 
     return <>
         <div className={classes.controlRow}>
@@ -23,7 +29,10 @@ export default function ViewControls() {
         </div>
         <div className={classes.controlRow}>
             {/* buttons, select all, file counter, generate document */}
-            <Button onClick={() => setFilter("iets-anders")}>Test</Button>
+            <Button
+                onClick={imageProvider.retrieveImages}
+                icon={<ArrowClockwiseFilled className={iconClass} />}
+            />
         </div>
     </>;
 }
