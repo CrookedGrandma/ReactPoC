@@ -1,5 +1,6 @@
 import { Image, makeStyles, Skeleton, SkeletonItem } from "@fluentui/react-components";
 import { ImageProviderStatus, useImageProvider } from "./context/ImageProvider.tsx";
+import { FilterValue } from "./Filter.tsx";
 import FotoboekContext from "./context/Contexts.tsx";
 
 const useStyles = makeStyles({
@@ -19,11 +20,35 @@ export default function ImageGrid() {
 
     const imageProvider = useImageProvider();
     const { value: images } = FotoboekContext.ImageList.useValue();
+    const { value: filter } = FotoboekContext.Filter.useValue();
+    const { value: sort } = FotoboekContext.Sort.useValue();
+
+    const filteredImages = (() => {
+        switch (filter) {
+            case FilterValue.Alle:
+                return images;
+            case FilterValue.SingleDigit:
+                return images.filter(i => parseInt(i.title.replace(".jpg", "")) < 10);
+            default:
+                throw Error(`Unsupported filter: ${filter}`);
+        }
+    })();
+
+    const sortedImages = (() => {
+        switch (sort) {
+            case "asc":
+                return filteredImages.toSorted((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true }));
+            case "desc":
+                return filteredImages.toSorted((a, b) => b.title.localeCompare(a.title, undefined, { numeric: true }));
+            default:
+                throw Error(`Unsupported sort: ${sort}`);
+        }
+    })();
 
     switch (imageProvider.state.status) {
         case ImageProviderStatus.Success:
             return <div className={classes.container}>
-                {images.map(file =>
+                {sortedImages.map(file =>
                     <Image key={file.id} src={file.data} alt={file.title} width={200} shape="rounded" />)}
             </div>;
 

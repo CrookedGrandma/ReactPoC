@@ -1,6 +1,11 @@
 import FotoboekContext from "./context/Contexts.tsx";
 import SelectDropdown from "./SelectDropdown";
 
+export enum FilterValue {
+    Alle = "alle",
+    SingleDigit = "single-digit",
+}
+
 export default function Filter() {
     const { setValue: setFilter, value } = FotoboekContext.Filter.useValue();
 
@@ -10,8 +15,8 @@ export default function Filter() {
     }
 
     const filterOptions = [
-        { value: "alle", label: "Alle" },
-        { value: "iets-anders", label: "Iets anders" },
+        { value: FilterValue.Alle, label: "Alle" },
+        { value: FilterValue.SingleDigit, label: "< 10" },
     ];
 
     return <SelectDropdown
