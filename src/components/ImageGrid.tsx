@@ -1,5 +1,5 @@
+import { FileServiceStatus, useFileServiceState } from "./context/FileServiceProvider.tsx";
 import { Image, makeStyles, Skeleton, SkeletonItem } from "@fluentui/react-components";
-import { ImageProviderStatus, useImageProvider } from "./context/ImageProvider.tsx";
 import { FilterValue } from "./Filter.tsx";
 import FotoboekContext from "./context/Contexts.tsx";
 
@@ -18,17 +18,17 @@ const useStyles = makeStyles({
 export default function ImageGrid() {
     const classes = useStyles();
 
-    const imageProvider = useImageProvider();
-    const { value: images } = FotoboekContext.ImageList.useValue();
+    const fileServiceState = useFileServiceState();
+
     const { value: filter } = FotoboekContext.Filter.useValue();
     const { value: sort } = FotoboekContext.Sort.useValue();
 
     const filteredImages = (() => {
         switch (filter) {
             case FilterValue.Alle:
-                return images;
+                return fileServiceState.files;
             case FilterValue.SingleDigit:
-                return images.filter(i => parseInt(i.title.replace(".jpg", "")) < 10);
+                return fileServiceState.files.filter(i => parseInt(i.title.replace(".jpg", "")) < 10);
             default:
                 throw Error(`Unsupported filter: ${filter}`);
         }
@@ -45,18 +45,18 @@ export default function ImageGrid() {
         }
     })();
 
-    switch (imageProvider.state.status) {
-        case ImageProviderStatus.Success:
+    switch (fileServiceState.status) {
+        case FileServiceStatus.Success:
             return <div className={classes.container}>
                 {sortedImages.map(file =>
                     <Image key={file.id} src={file.data} alt={file.title} width={200} shape="rounded" />)}
             </div>;
 
-        case ImageProviderStatus.Failed:
+        case FileServiceStatus.Failed:
             return <p>Oepsie poepsie</p>;
 
-        case ImageProviderStatus.Waiting:
-        case ImageProviderStatus.NotStarted:
+        case FileServiceStatus.Waiting:
+        case FileServiceStatus.NotStarted:
             return <Skeleton className={classes.container}>
                 {Array.from(Array(12), (_, i) => i)
                     .map(i => <SkeletonItem key={`skel${i}`} className={classes.skeletonItem} shape="square" />)}

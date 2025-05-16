@@ -1,7 +1,8 @@
+import { Annotation, useFileServiceActions } from "./context/FileServiceProvider.tsx";
 import { makeStyles, mergeClasses, shorthands, tokens } from "@fluentui/react-components";
 import React, { useState } from "react";
+import { blobToBase64 } from "../util.ts";
 import FileInput from "./FileInput.tsx";
-import { useImageProvider } from "./context/ImageProvider.tsx";
 
 const useStyles = makeStyles({
     container: {
@@ -24,6 +25,14 @@ const useStyles = makeStyles({
     },
 });
 
+async function blobToAnnotation(file: File): Promise<Annotation> {
+    return {
+        id: crypto.randomUUID(),
+        title: new Date().toISOString(),
+        data: await blobToBase64(file),
+    };
+}
+
 interface Props {
     allowedTypes?: string;
 }
@@ -31,7 +40,7 @@ interface Props {
 export default function FileDropZone({ allowedTypes }: Readonly<Props>) {
     const classes = useStyles();
 
-    const imageProvider = useImageProvider();
+    const fileServiceActions = useFileServiceActions();
 
     const [isDragging, setIsDragging] = useState(false);
 
@@ -56,7 +65,10 @@ export default function FileDropZone({ allowedTypes }: Readonly<Props>) {
 
     async function handleFileSelect(files: FileList) {
         console.log("Selected files:", files);
-        await imageProvider.uploadImages(files);
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            await fileServiceActions.uploadFile(await blobToAnnotation(file));
+        }
     }
 
     return <div className={classes.container}>

@@ -1,5 +1,5 @@
 import { Button, makeStyles } from "@fluentui/react-components";
-import { ImageProviderStatus, useImageProvider } from "./context/ImageProvider.tsx";
+import { FileServiceStatus, useFileServiceActions, useFileServiceState } from "./context/FileServiceProvider.tsx";
 import { ArrowClockwiseFilled } from "@fluentui/react-icons";
 import Filter from "./Filter.tsx";
 import Sort from "./Sort.tsx";
@@ -15,10 +15,11 @@ const useStyles = makeStyles({
 export default function ViewControls() {
     const classes = useStyles();
 
-    const imageProvider = useImageProvider();
+    const fileServiceState = useFileServiceState();
+    const fileServiceActions = useFileServiceActions();
 
-    const iconClass = [ImageProviderStatus.NotStarted, ImageProviderStatus.Waiting]
-        .includes(imageProvider.state.status)
+    const iconClass = [FileServiceStatus.NotStarted, FileServiceStatus.Waiting]
+        .includes(fileServiceState.status)
         ? "rotating"
         : "";
 
@@ -30,7 +31,7 @@ export default function ViewControls() {
         <div className={classes.controlRow}>
             {/* buttons, select all, file counter, generate document */}
             <Button
-                onClick={imageProvider.retrieveImages}
+                onClick={fileServiceActions.refreshFiles}
                 icon={<ArrowClockwiseFilled className={iconClass} />}
             />
         </div>
