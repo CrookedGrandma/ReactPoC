@@ -30,6 +30,7 @@ async function blobToAnnotation(file: File): Promise<Annotation> {
         id: crypto.randomUUID(),
         title: new Date().toISOString(),
         data: await blobToBase64(file),
+        selected: false,
     };
 }
 

@@ -1,7 +1,8 @@
 import { FileServiceStatus, useFileServiceState } from "./context/FileServiceProvider.tsx";
-import { Image, makeStyles, Skeleton, SkeletonItem } from "@fluentui/react-components";
+import { makeStyles, Skeleton, SkeletonItem } from "@fluentui/react-components";
 import { FilterValue } from "./Filter.tsx";
 import FotoboekContext from "./context/Contexts.tsx";
+import ImageGridImage from "./ImageGridImage.tsx";
 
 const useStyles = makeStyles({
     container: {
@@ -48,8 +49,7 @@ export default function ImageGrid() {
     switch (fileServiceState.status) {
         case FileServiceStatus.Success:
             return <div className={classes.container}>
-                {sortedImages.map(file =>
-                    <Image key={file.id} src={file.data} alt={file.title} width={200} shape="rounded" />)}
+                {sortedImages.map(file => <ImageGridImage key={file.id} file={file} />)}
             </div>;
 
         case FileServiceStatus.Failed:
